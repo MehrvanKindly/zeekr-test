@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zeekr hand-off test</title>
+<style>
+  :root { --bg:#0b1020; --card:#1e293b; --fg:#fff; --muted:#94a3b8; --ok:#22c55e; --no:#f59e0b; --blue:#3b82f6; }
+  * { box-sizing:border-box; }
+  body { margin:0; padding:24px; background:var(--bg); color:var(--fg);
+         font-family:system-ui, Roboto, Arial, sans-serif; font-size:22px; }
+  h1 { font-size:34px; margin:0 0 8px; }
+  h2 { font-size:26px; margin:32px 0 12px; color:#cbd5e1; }
+  p.note { color:var(--muted); margin:0 0 16px; }
+  #env { background:var(--card); border-radius:12px; padding:14px 18px; font-size:18px;
+         color:var(--muted); word-break:break-all; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:14px; }
+  .t { display:block; background:var(--card); border-radius:14px; padding:20px; color:var(--fg);
+       text-decoration:none; border:2px solid transparent; cursor:pointer; text-align:left;
+       font:inherit; width:100%; }
+  .t b { color:var(--blue); margin-right:8px; }
+  .t small { display:block; color:var(--muted); font-size:17px; margin-top:6px; }
+  .t .s { display:block; font-size:18px; margin-top:8px; min-height:1.2em; }
+  .t.ok { border-color:var(--ok); } .t.ok .s { color:var(--ok); }
+  .t.no { border-color:var(--no); } .t.no .s { color:var(--no); }
+  input[type=file] { font-size:20px; color:var(--fg); margin-top:8px; }
+</style>
+</head>
+<body>
+<h1>Hand-off test</h1>
+<p class="note">Tap each tile once. If something opens, come back. Each tile then shows
+<b style="color:var(--ok)">left the page</b> or <b style="color:var(--no)">no reaction</b>.
+Take a photo of this screen when you're done.</p>
+<div id="env">Checking…</div>
+
+<h2>A. Hand the APK or link to another app</h2>
+<div class="grid">
+  <a class="t" data-id="A1" target="_blank" href="https://f-droid.org/F-Droid.apk">
+    <b>A1</b>F-Droid APK in new window<small>Some web windows send new windows to a real browser</small><span class="s"></span></a>
+  <button class="t" data-id="A2" data-js="open">
+    <b>A2</b>window.open the APK<small>Same idea, via script</small><span class="s"></span></button>
+  <a class="t" data-id="A3" href="intent://f-droid.org/F-Droid.apk#Intent;scheme=https;type=application/vnd.android.package-archive;end">
+    <b>A3</b>APK as Android intent<small>Asks the system who can handle an APK link</small><span class="s"></span></a>
+  <a class="t" data-id="A4" href="intent://f-droid.org/#Intent;scheme=https;action=android.intent.action.VIEW;category=android.intent.category.BROWSABLE;end">
+    <b>A4</b>Open in any system browser<small>Finds a hidden browser if one exists</small><span class="s"></span></a>
+  <button class="t" data-id="A5" data-js="share">
+    <b>A5</b>Share the APK link<small>Opens the Android share sheet if supported</small><span class="s"></span></button>
+  <a class="t" data-id="A6" href="https://github.com/brave/brave-browser/releases/latest/download/Bravearm64Universal.apk" download>
+    <b>A6</b>Brave APK (download attribute)<small>Direct file link, forced download</small><span class="s"></span></a>
+</div>
+
+<h2>B. Ask an app store for Brave</h2>
+<div class="grid">
+  <a class="t" data-id="B1" href="market://details?id=com.brave.browser">
+    <b>B1</b>market:// link<small>Any store that handles Play links</small><span class="s"></span></a>
+  <a class="t" data-id="B2" href="amzn://apps/android?p=com.brave.browser">
+    <b>B2</b>amzn:// link<small>Amazon Appstore deep link</small><span class="s"></span></a>
+  <a class="t" data-id="B3" href="intent://details?id=com.brave.browser#Intent;scheme=market;package=com.amazon.venezia;end">
+    <b>B3</b>Amazon Appstore by intent<small>Targets Amazon's store app directly</small><span class="s"></span></a>
+  <a class="t" data-id="B4" href="intent://details?id=org.fdroid.fdroid#Intent;scheme=market;package=com.amazon.venezia;end">
+    <b>B4</b>Amazon Appstore: F-Droid<small>Is F-Droid listed for the car?</small><span class="s"></span></a>
+</div>
+
+<h2>C. Open system settings</h2>
+<div class="grid">
+  <a class="t" data-id="C1" href="intent:#Intent;action=android.settings.SETTINGS;end">
+    <b>C1</b>Android Settings<small>Full Android settings app</small><span class="s"></span></a>
+  <a class="t" data-id="C2" href="intent:#Intent;action=android.settings.APPLICATION_DEVELOPMENT_SETTINGS;end">
+    <b>C2</b>Developer options<small>Look for USB debugging</small><span class="s"></span></a>
+  <a class="t" data-id="C3" href="intent:#Intent;action=android.settings.DEVICE_INFO_SETTINGS;end">
+    <b>C3</b>About device<small>Tap "Build number" 7 times for developer options</small><span class="s"></span></a>
+  <a class="t" data-id="C4" href="intent:#Intent;action=android.settings.MANAGE_UNKNOWN_APP_SOURCES;end">
+    <b>C4</b>Install unknown apps<small>Which apps may install APKs</small><span class="s"></span></a>
+</div>
+
+<h2>D. Files</h2>
+<div class="grid">
+  <a class="t" data-id="D1" href="intent:#Intent;component=com.android.documentsui/.files.FilesActivity;end">
+    <b>D1</b>Files app (AOSP)<small>Could open an APK from USB</small><span class="s"></span></a>
+  <a class="t" data-id="D2" href="intent:#Intent;component=com.google.android.documentsui/com.android.documentsui.files.FilesActivity;end">
+    <b>D2</b>Files app (Google build)<small>Same, other package name</small><span class="s"></span></a>
+  <a class="t" data-id="D3" href="intent:#Intent;action=android.intent.action.VIEW;type=resource/folder;end">
+    <b>D3</b>Any file manager<small>Asks the system for a folder viewer</small><span class="s"></span></a>
+  <label class="t" data-id="D4">
+    <b>D4</b>File picker<small>Does a picker appear? Can you see a USB stick?</small>
+    <input type="file"><span class="s"></span></label>
+</div>
+
+<script>
+(function () {
+  var ua = navigator.userAgent;
+  var isWV = /; wv\)/.test(ua) || /Version\/\d+\.\d+ Chrome/.test(ua);
+  document.getElementById('env').innerHTML =
+    '<b>Window type:</b> ' + (isWV ? 'Android WebView (embedded)' : 'Full browser or Custom Tab') +
+    ' &nbsp;·&nbsp; <b>Share supported:</b> ' + (navigator.share ? 'yes' : 'no') +
+    '<br>' + ua.replace(/</g, '&lt;');
+
+  var current = null, left = false;
+  function mark(el, ok, text) {
+    el.classList.remove('ok', 'no');
+    el.classList.add(ok ? 'ok' : 'no');
+    el.querySelector('.s').textContent = text;
+  }
+  function away() { if (current) left = true; }
+  document.addEventListener('visibilitychange', function () { if (document.hidden) away(); });
+  window.addEventListener('blur', away);
+  window.addEventListener('pagehide', away);
+
+  function watch(el) {
+    current = el; left = false;
+    el.querySelector('.s').textContent = 'Testing…';
+    setTimeout(function () {
+      if (current !== el) return;
+      if (left) mark(el, true, 'Left the page: something opened');
+      else mark(el, false, 'No reaction');
+      current = null;
+    }, 2500);
+  }
+
+  var apk = 'https://f-droid.org/F-Droid.apk';
+  Array.prototype.forEach.call(document.querySelectorAll('.t'), function (el) {
+    if (el.dataset.id === 'D4') {
+      var inp = el.querySelector('input');
+      inp.addEventListener('click', function () { watch(el); });
+      inp.addEventListener('change', function () {
+        mark(el, true, 'Picker worked: ' + (inp.files[0] ? inp.files[0].name : 'nothing chosen'));
+      });
+      return;
+    }
+    el.addEventListener('click', function () {
+      watch(el);
+      try {
+        if (el.dataset.js === 'open') {
+          var w = window.open(apk, '_blank');
+          if (!w) mark(el, false, 'Blocked (window.open returned nothing)');
+        } else if (el.dataset.js === 'share') {
+          if (!navigator.share) { mark(el, false, 'Share not supported here'); current = null; return; }
+          navigator.share({ title: 'F-Droid', url: apk })
+            .then(function () { mark(el, true, 'Shared'); })
+            .catch(function (e) { mark(el, false, 'Share failed: ' + e.name); });
+        }
+      } catch (e) { mark(el, false, 'Error: ' + e.message); current = null; }
+    });
+  });
+})();
+</script>
+</body>
+</html>
